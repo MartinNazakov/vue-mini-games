@@ -8,7 +8,6 @@
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
                 v-model="formInputs.username"
-                :counter="4"
                 :rules="usernameRules"
                 label="username"
                 required
@@ -16,7 +15,6 @@
 
               <v-text-field
                 v-model="formInputs.password"
-                :counter="4"
                 :rules="passwordRules"
                 :append-icon="passwordVisible ? 'visibility' : 'visibility_off'"
                 :type="passwordVisible ? 'text' : 'password'"
@@ -49,14 +47,14 @@ export default Vue.extend({
       },
       usernameRules: [
         v => !!v || "Username is required",
-        v => (v && v.length >= 4) || "Username must be more than 6 characters"
+        v => (v && v.length >= 4) || "Username must be more than 4 characters"
       ],
       passwordRules: [
         v => !!v || "Password is required",
-        v => (v && v.length >= 4) || "Password must be more than 6 characters"
+        v => (v && v.length >= 4) || "Password must be more than 4 characters"
       ],
-      valid: true,
-      passwordVisible: false
+      valid: false,
+      passwordVisible: false,
     };
   },
   computed: {
@@ -72,14 +70,15 @@ export default Vue.extend({
       }
     },
     register() {
-      axios
-        .post("localhost:5000/users/login", this.formInputs)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      let data = {
+        username: this.formInputs.username,
+        password: this.formInputs.password
+      };
+
+      this.$store
+        .dispatch("register", data)
+        .then(() => this.$router.push("login"))
+        .catch(err => console.log(err));
     }
   }
 });
