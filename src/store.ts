@@ -11,6 +11,11 @@ export default new Vuex.Store({
     auth: {
       registerStatus: '',
     },
+    snackbar: {
+      show: false,
+      message: '',
+      type: ''
+    },
     authStatus: '',
     token: '',
     user: {}
@@ -19,14 +24,20 @@ export default new Vuex.Store({
     registerRequest: function (state) {
       state.auth.registerStatus = 'loading'
     },
-    registerSuccess: function (state, payload) {
+    registerSuccess: function (state) {
       state.auth.registerStatus = 'success'
     },
     registerError: function (state) {
       state.auth.registerStatus = 'error'
+    },
+    toggleSnackbar: function (state, snackbarConfig) {
+      state.snackbar = snackbarConfig;
     }
   },
   actions: {
+    toggleSnackbar({ commit }, snackbarConfig) {
+      commit('toggleSnackbar', snackbarConfig)
+    },
     register({ commit }, user: User) {
       return new Promise((resolve, reject) => {
         commit('registerRequest')
@@ -59,6 +70,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    registerStatus: state => state.auth.registerStatus
+    registerStatus: state => state.auth.registerStatus,
+    snackbar: state => state.snackbar
   }
 })

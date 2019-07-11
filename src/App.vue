@@ -1,16 +1,27 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
+      <router-link to="/">Home</router-link>|
       <router-link to="/register">Register</router-link>
     </div>
-    <router-view/>
+    <Snackbar />
+    <router-view />
   </div>
 </template>
 
+<script>
+import Snackbar from "@/components/shared/Snackbar/Snackbar";
+
+export default {
+  components: {
+    Snackbar
+  }
+};
+</script>
+
 <style lang="scss">
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

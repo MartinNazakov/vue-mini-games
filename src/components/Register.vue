@@ -54,7 +54,7 @@ export default Vue.extend({
         v => (v && v.length >= 4) || "Password must be more than 4 characters"
       ],
       valid: false,
-      passwordVisible: false,
+      passwordVisible: false
     };
   },
   computed: {
@@ -65,6 +65,7 @@ export default Vue.extend({
   },
   methods: {
     validate() {
+      this.toggleNotification();
       if (this.form.validate()) {
         this.register();
       }
@@ -79,6 +80,9 @@ export default Vue.extend({
         .dispatch("register", data)
         .then(() => this.$router.push("login"))
         .catch(err => console.log(err));
+    },
+    toggleNotification() {
+      this.$store.dispatch("toggleSnackbar", { show: true, message: "test", type: "success" });
     }
   }
 });
