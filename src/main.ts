@@ -11,18 +11,6 @@ Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 
-Vue.mixin({
-  methods: {
-    showSnackbar(type, message) {
-      this.$store.dispatch("toggleSnackbar", {
-        show: true,
-        message: message,
-        type: type
-      });
-    }
-  }
-})
-
 new Vue({
   router,
   store,

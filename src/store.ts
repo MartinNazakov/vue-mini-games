@@ -40,14 +40,20 @@ export default new Vuex.Store({
     },
     register({ commit }, user: User) {
       return new Promise((resolve, reject) => {
-        commit('registerRequest')
+        // commit('registerRequest')
         axios({ url: 'http://localhost:5000/users/register', data: user, method: 'POST' })
           .then(resp => {
-            commit('registerSuccess')
+            // commit('registerSuccess')
+            commit('toggleSnackbar', {show: true, type: 'success', message: 'Registration successful!'})
             resolve(resp)
           })
           .catch(err => {
-            commit('registerError')
+            if (err.response.status === 409) {
+              commit('toggleSnackbar', {show: true, type: 'error', message: err.response.data.message})
+            } else {
+              commit('toggleSnackbar', {show: true, type: 'error', message: 'Unexpected error occured!'})
+            }
+            // commit('registerError')
             reject(err)
           })
       })

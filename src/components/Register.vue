@@ -78,7 +78,6 @@ export default Vue.extend({
       this.$store
         .dispatch("register", data)
         .then(() => {
-            this.showSnackbar('success', 'Registration sucessful!');
             this.$router.push("login");
         })
         .catch(err => console.log(err));
