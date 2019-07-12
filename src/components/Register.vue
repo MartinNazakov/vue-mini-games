@@ -65,7 +65,6 @@ export default Vue.extend({
   },
   methods: {
     validate() {
-      this.toggleNotification();
       if (this.form.validate()) {
         this.register();
       }
@@ -78,12 +77,12 @@ export default Vue.extend({
 
       this.$store
         .dispatch("register", data)
-        .then(() => this.$router.push("login"))
+        .then(() => {
+            this.showSnackbar('success', 'Registration sucessful!');
+            this.$router.push("login");
+        })
         .catch(err => console.log(err));
     },
-    toggleNotification() {
-      this.$store.dispatch("toggleSnackbar", { show: true, message: "test", type: "success" });
-    }
   }
 });
 </script>

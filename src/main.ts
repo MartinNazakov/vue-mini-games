@@ -3,12 +3,25 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Vuetify from 'vuetify'
+
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
+
+Vue.mixin({
+  methods: {
+    showSnackbar(type, message) {
+      this.$store.dispatch("toggleSnackbar", {
+        show: true,
+        message: message,
+        type: type
+      });
+    }
+  }
+})
 
 new Vue({
   router,
