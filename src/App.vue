@@ -1,8 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link>|
-      <router-link to="/register">Register</router-link>
+      <Navbar />
     </div>
     <Snackbar />
     <router-view />
@@ -11,9 +10,11 @@
 
 <script>
 import Snackbar from "@/components/shared/Snackbar/Snackbar";
+import Navbar from "@/components/shared/navbar/Navbar";
 
 export default {
   components: {
+    Navbar,
     Snackbar
   }
 };
@@ -28,7 +29,7 @@ export default {
   color: #2c3e50;
 }
 #nav {
-  padding: 30px;
+  padding: 0;
   a {
     font-weight: bold;
     color: #2c3e50;

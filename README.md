@@ -1,4 +1,4 @@
-# mini-games
+# client
 
 ## Project setup
 ```

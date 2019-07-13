@@ -23,14 +23,6 @@
                 required
                 @click:append="passwordVisible = !passwordVisible"
               ></v-text-field>
-              <v-alert
-                v-model="successAlert.show"
-                :type="successAlert.type"
-                :dismissible="successAlert.dismissible"
-                class="mb-3"
-                transition="scale-transition"
-              >{{ successAlert.message }}</v-alert>
-
               <v-btn :disabled="!valid || sending" color="success" @click="validate">Login</v-btn>
             </v-form>
           </v-flex>
@@ -40,11 +32,11 @@
   </v-app>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import axios from "axios";
 
-export default Vue.extend({
+export default {
   name: "Login",
   data: function() {
     return {
@@ -62,68 +54,32 @@ export default Vue.extend({
       ],
       valid: false,
       passwordVisible: false,
-      sending: false,
-      successAlert: {
-        show: false,
-        type: "success",
-        message: "",
-        dismissible: true
-      },
-      errorAlert: {
-        show: false,
-        type: "error",
-        message: "",
-        dismissible: true
-      }
+      sending: false
     };
   },
-  created() {
-    // if user has registered, the username will come from the route
-    // and it can be auto-completed in the input
-    this.formInputs.username = this.$route.params.username || "";
-
-    // show alert that user has been registered successfully
-    this.successAlert.message = "Registration successful! You can now login.";
-    this.successAlert.show = true;
-  },
-  computed: {
-    // needed, because typescript needs to know the type of the form object
-    form(): Vue & { validate: () => boolean } {
-      return this.$refs.form as Vue & { validate: () => boolean };
-    }
-  },
   methods: {
-    validate() {
-      this.successAlert.show = false;
-      if (this.form.validate()) {
+    validate: function() {
+      if (this.$refs.form.validate()) {
         this.login();
       }
     },
-    login() {
-      let _this = this;
+    login: function() {
+      const userData = {
+        username: this.formInputs.username,
+        password: this.formInputs.password
+      };
+  
       this.sending = true;
-      axios
-        .post("http://localhost:5000/users/login", this.formInputs)
-        .then(response => {
-          //   this.$router.push({
-          //     name: "login",
-          //     params: { username: this.formInputs.username }
-          //   });
+      this.$store
+        .dispatch("login", userData)
+        .then(() => {
+          this.$router.push("/")
         })
-        .catch(err => {
-          // user already exists
-          if (err.response.status === 409) {
-            _this.errorAlert.message = err.response.data.message;
-          } else _this.errorAlert.message = "An unknown error occured!";
-
-          _this.errorAlert.show = true;
-        })
-        .then(function() {
-          _this.sending = false;
-        });
+        .catch(err => console.log(err))
+        .then(() => (this.sending = false));
     }
   }
-});
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -33,11 +33,11 @@
   </v-app>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import axios from "axios";
 
-export default Vue.extend({
+export default {
   name: "Register",
   data: function() {
     return {
@@ -57,33 +57,27 @@ export default Vue.extend({
       passwordVisible: false
     };
   },
-  computed: {
-    // needed, because typescript needs to know the type of the form object
-    form(): Vue & { validate: () => boolean } {
-      return this.$refs.form as Vue & { validate: () => boolean };
-    }
-  },
   methods: {
     validate() {
-      if (this.form.validate()) {
+      if (this.$refs.form.validate()) {
         this.register();
       }
     },
     register() {
-      let data = {
+      const userData = {
         username: this.formInputs.username,
         password: this.formInputs.password
       };
 
       this.$store
-        .dispatch("register", data)
+        .dispatch("register", userData)
         .then(() => {
-            this.$router.push("login");
+          this.$router.push("login");
         })
         .catch(err => console.log(err));
-    },
+    }
   }
-});
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

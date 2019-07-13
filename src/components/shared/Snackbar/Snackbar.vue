@@ -9,6 +9,9 @@
     :top="y === 'top'"
   >
     {{message}}
+    <v-btn dark flat @click="closeSnackbar">
+      <v-icon>close</v-icon>
+    </v-btn>
     <!-- <v-btn flat color="accent" @click.native="show = false">Close</v-btn> -->
   </v-snackbar>
 </template>
@@ -24,7 +27,7 @@ export default {
       type: "",
       x: "right",
       y: "top",
-      timeout: 3000
+      timeout: 6000
     };
   },
   computed: mapState(["snackbar"]),
@@ -36,6 +39,11 @@ export default {
         this.type = this.snackbar.type;
         this.message = this.snackbar.message;
       }
+    }
+  },
+  methods: {
+    closeSnackbar() {
+      this.show = false;
     }
   }
 };
