@@ -37,11 +37,13 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.getUserAuthStatus && store.getters.getAccessToken) {
-      next()
-      return
+    const loggedIn = !!TokenService.getToken();
+    if (!loggedIn) {
+      next('/login');
     }
-    next('/login')
+    next()
+    return
+
   } else {
     next()
   }

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import axios from 'axios';
+import router from './router';
 
 Vue.use(Vuex)
 
@@ -12,27 +13,16 @@ export default new Vuex.Store({
       message: '',
       type: ''
     },
-    user: {
-      username: '',
-      isAuthenticated: false || localStorage.getItem('token'),
-      token: localStorage.getItem('token') || null,
-    }
+    accessToken: localStorage.getItem('token') || null,
+    username: ''
   },
   mutations: {
     toggleSnackbar: function (state, snackbarConfig) {
       state.snackbar = snackbarConfig;
     },
-    setUsername: function (state, username) {
-      state.user.username = username;
-    },
-    setUserAuthenticated: function (state, isAuthenticated) {
-      state.user.isAuthenticated = isAuthenticated;
-    },
-    setUser(state, user) {
-      state.user = Object.assign({}, user);
-    },
-    updateAccessToken: (state, token) => {
-      state.user.token = token;
+    loginStatus(state, payload) {
+      state.accessToken = payload.accessToken
+      state.username = payload.username
     }
   },
   actions: {
@@ -85,56 +75,48 @@ export default new Vuex.Store({
           method: 'POST'
         })
         .then(resp => {
+          const token = resp.data.token;
 
-          const isAuthenticated = resp.data.isAuthenticated;
+          localStorage.setItem('token', token);
+          axios.defaults.headers.common['Authorization'] = token;
 
-          if (isAuthenticated) {
+          commit('loginStatus', {
+            accessToken: token,
+            username: resp.data.username
+          });
 
-            const username = resp.data.username;
-            const token = resp.data.token;
-
-            commit('updateAccessToken', token);
-            localStorage.setItem('token', token);
-            axios.defaults.headers.common['Authorization'] = token;
-
-            commit('setUsername', username);
-            commit('setUserAuthenticated', isAuthenticated);
-
-            commit('toggleSnackbar', {
-              show: true,
-              type: 'success',
-              message: 'Login successful!'
-            })
-
-          } else {
-            // reset store user data and delete token from local storage
-            localStorage.removeItem('token');
-            commit('updateAccessToken', null);
-            commit('setUser', {});
-            commit('toggleSnackbar', {
-              show: true,
-              type: 'error',
-              message: 'Login failed!'
-            });
-          }
+          commit('toggleSnackbar', {
+            show: true,
+            type: 'success',
+            message: 'Login successful!'
+          })
+          router.push("/");
 
         })
         .catch(err => {
+          localStorage.removeItem('token');
+          axios.defaults.headers.common['Authorization'] = '';
+
+          commit('loginStatus', {
+            accessToken: '',
+            username: ''
+          });
+
           commit('toggleSnackbar', {
             show: true,
             type: 'error',
             message: err.message
           });
-          localStorage.removeItem('token');
-          commit('updateAccessToken', null);
         })
     },
     logout({
       commit
     }) {
       localStorage.removeItem('token');
-      commit('updateAccessToken', null);
-      commit('setUser', {});
+      commit('loginStatus', {
+        accessToken: '',
+        username: ''
+      });
       commit('toggleSnackbar', {
         show: true,
         type: 'info',
@@ -143,11 +125,8 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    getUserAuthStatus: (state) => {
-      return state.user.isAuthenticated;
-    },
-    getAccessToken: (state) => {
-      return state.user.token;
+    loggedIn: (state) => {
+      return state.accessToken ? true : false
     }
   }
 })

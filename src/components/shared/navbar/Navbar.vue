@@ -50,7 +50,8 @@ export default {
   },
   computed: {
     isUserAuthenticated() {
-      return this.$store.getters["getUserAuthStatus"];
+      debugger;
+      return this.$store.getters["loggedIn"];
     }
   },
   methods: {
