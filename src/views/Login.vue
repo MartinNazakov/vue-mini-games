@@ -2,14 +2,14 @@
   <Login />
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import Login from "@/components/Login.vue"; // @ is an alias to /src
 
-export default Vue.extend({
+export default {
   name: "login",
   components: {
     Login
   }
-});
+};
 </script>

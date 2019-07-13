@@ -1,4 +1,5 @@
-export default interface User {
-    username: string;
-    password: string
+export default class User {
+    username;
+    isAuthenticated;
+    // token;
 }
