@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="dashboard">
-      <h1>Dashboard</h1>
+      <h1 class="text-main">Dashboard</h1>
       <v-layout align-center justify-center row fill-height>
         <v-flex xs12 sm6 md4>
           <v-form ref="form" lazy-validation>

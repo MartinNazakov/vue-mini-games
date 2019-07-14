@@ -1,11 +1,16 @@
 <template>
   <v-menu offset-y content-class="dropdown-menu" transition="slide-y-transition">
-    <v-btn slot="activator">
-      <v-icon>account_circle</v-icon>
+    <v-btn flat slot="activator">
+      <v-icon color="white">account_circle</v-icon>
     </v-btn>
     <v-card>
       <v-list dense>
-        <v-list-tile v-for="action in actions" :key="action.name" @click="action.action">
+        <v-list-tile
+          class="user-action"
+          v-for="action in actions"
+          :key="action.name"
+          @click="action.action"
+        >
           <v-list-tile-title v-text="action.name" />
         </v-list-tile>
       </v-list>

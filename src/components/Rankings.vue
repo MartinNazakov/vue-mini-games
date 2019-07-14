@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="dashboard">
-      <h1>Rankings - Top 20</h1>
+      <h1 class="text-main">Rankings - Top 20</h1>
       <v-data-table
         :headers="headers"
         :items="getUserRankings"

@@ -1,12 +1,10 @@
 <template>
-  <v-app>
-    <div id="app">
-      <div id="nav">
-        <Navbar />
-      </div>
-      <Snackbar />
-      <router-view />
+  <v-app id="app">
+    <div id="nav">
+      <Navbar />
     </div>
+    <Snackbar />
+    <router-view />
   </v-app>
 </template>
 
@@ -29,15 +27,31 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-image: linear-gradient(
+    to right top,
+    #aeb3b9,
+    #7fa0d1,
+    #5589e6,
+    #3c6ef4,
+    #4f47f8
+  );
 }
 #nav {
   padding: 0;
   a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+    color: #ffffff;
+    text-shadow: 0.5px 0.5px black;
+    text-decoration: none;
+    // font-weight: bold;
+    // color: #2c3e50;
+    // &.router-link-exact-active {
+    //   color: #42b983;
+    // }
   }
+}
+
+.text-main {
+  color: #ffffff;
+  text-shadow: 0.5px 0.5px black;
 }
 </style>
