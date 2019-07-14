@@ -16,7 +16,8 @@ export default new Vuex.Store({
     accessToken: localStorage.getItem('token') || null,
     username: '',
     email: '',
-    birthDate: ''
+    birthDate: '',
+    rankings: []
   },
   mutations: {
     toggleSnackbar: function (state, snackbarConfig) {
@@ -34,6 +35,9 @@ export default new Vuex.Store({
     },
     setBirthDate(state, birthDate) {
       state.birthDate = birthDate;
+    },
+    setRankings(state, rankings) {
+      state.rankings = rankings;
     }
   },
   actions: {
@@ -194,6 +198,24 @@ export default new Vuex.Store({
             message: 'Failed to update user information!'
           })
         })
+    },
+    fetchRankings({
+      commit
+    }) {
+      return axios({
+          url: 'http://localhost:5000/users/rankings',
+          method: 'GET'
+        })
+        .then(resp => {
+          commit('setRankings', resp.data);
+        })
+        .catch(err => {
+          commit('toggleSnackbar', {
+            show: true,
+            type: 'error',
+            message: 'Failed load user rankings!'
+          })
+        })
     }
   },
   getters: {
@@ -208,6 +230,9 @@ export default new Vuex.Store({
     },
     birthDate: (state) => {
       return state.birthDate;
+    },
+    rankings: (state) => {
+      return state.rankings;
     }
   }
 })

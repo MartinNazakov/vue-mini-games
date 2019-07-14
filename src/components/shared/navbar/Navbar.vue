@@ -3,7 +3,7 @@
     <v-flex xs12 sm12 md12>
       <v-toolbar :color="navbar.color" :dark="navbar.color">
         <v-toolbar-title>{{navbar.title}}</v-toolbar-title>
-        <v-toolbar-items>
+        <v-toolbar-items class="pl-5">
           <v-btn flat>
             <router-link to="/">Home</router-link>
           </v-btn>
@@ -14,7 +14,7 @@
             <router-link to="/register">Register</router-link>
           </v-btn>
           <v-btn flat>
-            <router-link to="/dashboard">Rankings</router-link>
+            <router-link to="/rankings">Rankings</router-link>
           </v-btn>
         </v-toolbar-items>
         <v-spacer></v-spacer>
