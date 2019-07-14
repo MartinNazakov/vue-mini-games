@@ -1,11 +1,13 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <Navbar />
+  <v-app>
+    <div id="app">
+      <div id="nav">
+        <Navbar />
+      </div>
+      <Snackbar />
+      <router-view />
     </div>
-    <Snackbar />
-    <router-view />
-  </div>
+  </v-app>
 </template>
 
 <script>

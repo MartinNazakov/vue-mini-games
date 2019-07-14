@@ -1,5 +1,4 @@
 <template>
-  <v-app>
     <v-container>
       <div class="login">
         <h1>Login</h1>
@@ -29,7 +28,6 @@
         </v-layout>
       </div>
     </v-container>
-  </v-app>
 </template>
 
 <script>

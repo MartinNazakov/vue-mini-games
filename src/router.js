@@ -11,10 +11,7 @@ let router = new Router({
   routes: [{
       path: '/',
       name: 'home',
-      component: Home,
-      // meta: {
-      //   requiresAuth: true
-      // }
+      component: Home
     },
     {
       path: '/register',
@@ -31,13 +28,25 @@ let router = new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import( /* webpackChunkName: "about" */ './views/Login.vue')
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import( /* webpackChunkName: "about" */ './views/UserDashboard.vue'),
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    const loggedIn = !!TokenService.getToken();
+    const loggedIn = !!localStorage.getItem('token');
+
     if (!loggedIn) {
       next('/login');
     }

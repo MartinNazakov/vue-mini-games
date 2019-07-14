@@ -14,7 +14,9 @@ export default new Vuex.Store({
       type: ''
     },
     accessToken: localStorage.getItem('token') || null,
-    username: ''
+    username: '',
+    email: '',
+    birthDate: ''
   },
   mutations: {
     toggleSnackbar: function (state, snackbarConfig) {
@@ -23,6 +25,15 @@ export default new Vuex.Store({
     loginStatus(state, payload) {
       state.accessToken = payload.accessToken
       state.username = payload.username
+    },
+    setUsername(state, username) {
+      state.username = username;
+    },
+    setEmail(state, email) {
+      state.email = email;
+    },
+    setBirthDate(state, birthDate) {
+      state.birthDate = birthDate;
     }
   },
   actions: {
@@ -30,6 +41,43 @@ export default new Vuex.Store({
       commit
     }, snackbarConfig) {
       commit('toggleSnackbar', snackbarConfig)
+    },
+    fetchUserData({
+      commit
+    }) {
+      axios({
+          url: 'http://localhost:5000/users/user',
+          method: 'GET'
+        })
+        .then(userData => {
+          commit('setUsername', userData.data.username);
+          commit('setEmail', userData.data.email);
+          commit('setBirthDate', userData.data.birthDate);
+        }).catch(err => {
+          if (err.response.status === 401) {
+            // logout user
+            localStorage.removeItem('token');
+            axios.defaults.headers.common['Authorization'] = '';
+
+            commit('loginStatus', {
+              accessToken: '',
+              username: ''
+            });
+
+            commit('toggleSnackbar', {
+              show: true,
+              type: 'error',
+              message: err.response.data.message
+            });
+          } else {
+            commit('toggleSnackbar', {
+              show: true,
+              type: 'error',
+              message: 'Error fetching user data!'
+            });
+          }
+          router.push("/");
+        })
     },
     register({
       commit
@@ -90,7 +138,7 @@ export default new Vuex.Store({
             type: 'success',
             message: 'Login successful!'
           })
-          router.push("/");
+          router.push("dashboard");
 
         })
         .catch(err => {
@@ -122,11 +170,44 @@ export default new Vuex.Store({
         type: 'info',
         message: 'Logged out!'
       });
+      router.push("/");
+    },
+    updateUserInfo({
+      commit
+    }, userinfo) {
+      return axios({
+          url: 'http://localhost:5000/users/updateInfo',
+          data: userinfo,
+          method: 'POST'
+        })
+        .then(() => {
+          commit('toggleSnackbar', {
+            show: true,
+            type: 'success',
+            message: 'Information Updated!'
+          })
+        })
+        .catch(err => {
+          commit('toggleSnackbar', {
+            show: true,
+            type: 'error',
+            message: 'Failed to update user information!'
+          })
+        })
     }
   },
   getters: {
     loggedIn: (state) => {
       return state.accessToken ? true : false
+    },
+    username: (state) => {
+      return state.username;
+    },
+    email: (state) => {
+      return state.email;
+    },
+    birthDate: (state) => {
+      return state.birthDate;
     }
   }
 })

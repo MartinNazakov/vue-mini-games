@@ -1,36 +1,34 @@
 <template>
-  <v-app>
-    <v-container>
-      <div class="register">
-        <h1>Register</h1>
-        <v-layout align-center justify-center row fill-height>
-          <v-flex xs12 sm6 md4>
-            <v-form ref="form" v-model="valid" lazy-validation>
-              <v-text-field
-                v-model="formInputs.username"
-                :rules="usernameRules"
-                label="username"
-                required
-              ></v-text-field>
+  <v-container>
+    <div class="register">
+      <h1>Register</h1>
+      <v-layout align-center justify-center row fill-height>
+        <v-flex xs12 sm6 md4>
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <v-text-field
+              v-model="formInputs.username"
+              :rules="usernameRules"
+              label="username"
+              required
+            ></v-text-field>
 
-              <v-text-field
-                v-model="formInputs.password"
-                :rules="passwordRules"
-                :append-icon="passwordVisible ? 'visibility' : 'visibility_off'"
-                :type="passwordVisible ? 'text' : 'password'"
-                label="password"
-                hint="At least 4 characters"
-                required
-                @click:append="passwordVisible = !passwordVisible"
-              ></v-text-field>
+            <v-text-field
+              v-model="formInputs.password"
+              :rules="passwordRules"
+              :append-icon="passwordVisible ? 'visibility' : 'visibility_off'"
+              :type="passwordVisible ? 'text' : 'password'"
+              label="password"
+              hint="At least 4 characters"
+              required
+              @click:append="passwordVisible = !passwordVisible"
+            ></v-text-field>
 
-              <v-btn :disabled="!valid" color="success" @click="validate">Register</v-btn>
-            </v-form>
-          </v-flex>
-        </v-layout>
-      </div>
-    </v-container>
-  </v-app>
+            <v-btn :disabled="!valid" color="success" @click="validate">Register</v-btn>
+          </v-form>
+        </v-flex>
+      </v-layout>
+    </div>
+  </v-container>
 </template>
 
 <script>
