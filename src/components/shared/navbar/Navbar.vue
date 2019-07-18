@@ -1,11 +1,17 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12 md12>
+      <Drawer :drawer.sync="drawer"></Drawer>
       <v-toolbar xs12 sm12 md12 class="pa-5" flat color="transparent">
         <!-- <v-icon color="light-green" x-large>whatshot</v-icon> -->
         <v-flex id="menu-items-container" xs12 sm12 md12>
           <v-toolbar-items md12>
-            <v-flex class="menu-item" xs12 sm12 md12>
+            <v-flex class="menu-item hidden-lg-and-up" xs12 sm12 md12>
+              <v-btn flat @click.native="drawer = !drawer">
+                <v-icon color="white">menu</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex class="menu-item hidden-md-and-down" xs12 sm12 md12>
               <v-btn flat>
                 <router-link to="/">Home</router-link>
               </v-btn>
@@ -38,22 +44,49 @@
 <script>
 import Vue from "vue";
 import NavUserActions from "./NavUserActions";
+import Drawer from "./Drawer";
 
 export default {
   name: "Navbar",
   components: {
-    NavUserActions
+    NavUserActions,
+    Drawer
   },
   data: function() {
     return {
       navbar: {
         title: "Vue Mini Games"
-      }
+      },
+      drawer: false
     };
   },
   computed: {
     isUserAuthenticated() {
       return this.$store.getters["loggedIn"];
+    }
+  },
+  methods: {
+    handler() {
+      this.drawer = false;
+    }
+  },
+  watch: {
+    drawer: {
+      handler: function(value) {
+        this.$nextTick(() => {
+          try {
+            if (value) {
+              document
+                .querySelector(".v-overlay")
+                .addEventListener("click", this.handler);
+            } else {
+              document
+                .querySelector(".v-overlay")
+                .removeEventListener("click", this.handler);
+            }
+          } catch (e) {}
+        });
+      }
     }
   }
 };
