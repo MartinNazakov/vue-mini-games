@@ -1,9 +1,9 @@
 <template>
-  <v-navigation-drawer app fixed clipped :stateless="!drawer" v-model="open">
+  <v-navigation-drawer class="blue darken-3" app fixed clipped :stateless="!drawer" v-model="open">
     <v-list two-line>
       <v-list-tile v-for="(item, index) in filteredItems" :key="index" :to="item.route">
         <v-list-tile-content>
-          <v-list-tile-title v-html="item.title"></v-list-tile-title>
+          <v-list-tile-title class="white--text white--darken-2" v-html="item.title"></v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
       <v-list-tile></v-list-tile>
@@ -14,37 +14,10 @@
 <script>
 export default {
   name: "Drawer",
-  props: ["drawer"],
+  props: ["drawer", "filteredItems"],
   data() {
     return {
-      theme: false,
-      items: [
-        {
-          route: "/",
-          title: "Home",
-          requireAuth: false
-        },
-        {
-          route: "/rankings",
-          title: "Rankings",
-          requireAuth: false
-        },
-        {
-          route: "/games",
-          title: "Games",
-          requireAuth: false
-        },
-        {
-          route: "/login",
-          title: "Login",
-          requireAuth: true
-        },
-        {
-          route: "/register",
-          title: "Register",
-          requireAuth: true
-        }
-      ]
+      theme: false
     };
   },
   computed: {
@@ -63,15 +36,14 @@ export default {
       set(value) {
         this.$emit("drawer:update", value);
       }
-    },
-    isUserAuthenticated() {
-      return this.$store.getters["loggedIn"];
-    },
-    filteredItems() {
-      return this.items.filter(
-        item => item.visibleCondition === undefined || item.visibleCondition
-      );
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+  #nav-drawer {
+    background-color: #0265ab;
+  }
+</style>
+

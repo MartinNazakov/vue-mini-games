@@ -1,7 +1,7 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12 md12>
-      <Drawer :drawer.sync="drawer"></Drawer>
+      <Drawer :drawer.sync="drawer" :filtered-items="filteredItems"></Drawer>
       <v-toolbar xs12 sm12 md12 class="pa-5" flat color="transparent">
         <!-- <v-icon color="light-green" x-large>whatshot</v-icon> -->
         <v-flex id="menu-items-container" xs12 sm12 md12>
@@ -12,20 +12,8 @@
               </v-btn>
             </v-flex>
             <v-flex class="menu-item hidden-md-and-down" xs12 sm12 md12>
-              <v-btn flat>
-                <router-link to="/">Home</router-link>
-              </v-btn>
-              <v-btn v-show="!isUserAuthenticated" flat>
-                <router-link to="/login">Login</router-link>
-              </v-btn>
-              <v-btn v-show="!isUserAuthenticated" flat>
-                <router-link to="/register">Register</router-link>
-              </v-btn>
-              <v-btn flat>
-                <router-link to="/rankings">Rankings</router-link>
-              </v-btn>
-              <v-btn flat>
-                <router-link to="/rankings">Games</router-link>
+              <v-btn v-for="(item, index) in filteredItems" :key="index" flat>
+                <router-link :to="item.route">{{item.title}}</router-link>
               </v-btn>
             </v-flex>
             <v-flex class="menu-item" xs12 sm12 md12>
@@ -57,12 +45,52 @@ export default {
       navbar: {
         title: "Vue Mini Games"
       },
+      items: [
+        {
+          route: "/",
+          title: "Home",
+          requireAuth: false,
+          showWhenAuthorized: true
+        },
+        {
+          route: "/rankings",
+          title: "Rankings",
+          requireAuth: true,
+          showWhenAuthorized: true
+        },
+        {
+          route: "/games",
+          title: "Games",
+          requireAuth: false,
+          showWhenAuthorized: true
+        },
+        {
+          route: "/login",
+          title: "Login",
+          requireAuth: false,
+          showWhenAuthorized: false
+        },
+        {
+          route: "/register",
+          title: "Register",
+          requireAuth: false,
+          showWhenAuthorized: false
+        }
+      ],
       drawer: false
     };
   },
   computed: {
     isUserAuthenticated() {
       return this.$store.getters["loggedIn"];
+    },
+    filteredItems() {
+      return this.items.filter(
+        item =>
+          (item.requireAuth &&
+          this.isUserAuthenticated) || (!item.requireAuth && !this.isUserAuthenticated)
+          || (!item.requireAuth && this.isUserAuthenticated && item.showWhenAuthorized)
+      );
     }
   },
   methods: {
