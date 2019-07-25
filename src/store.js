@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import axios from 'axios';
 import router from './router';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -17,7 +17,12 @@ export default new Vuex.Store({
     username: '',
     email: '',
     birthDate: '',
-    rankings: []
+    rankings: [],
+    lobby: {
+      host: '',
+      gameType: '',
+      maxPlayers: 0
+    }
   },
   mutations: {
     toggleSnackbar: function (state, snackbarConfig) {
@@ -38,6 +43,9 @@ export default new Vuex.Store({
     },
     setRankings(state, rankings) {
       state.rankings = rankings;
+    },
+    setLobby(state, lobbyData) {
+      state.lobby = lobbyData
     }
   },
   actions: {
@@ -192,11 +200,21 @@ export default new Vuex.Store({
           })
         })
         .catch(err => {
-          commit('toggleSnackbar', {
-            show: true,
-            type: 'error',
-            message: 'Failed to update user information!'
-          })
+          if (err.response.status === 401) {
+            this.dispatch("logout")
+            commit('toggleSnackbar', {
+              show: true,
+              type: 'error',
+              message: err.response.data.message
+            });
+
+          } else {
+            commit('toggleSnackbar', {
+              show: true,
+              type: 'error',
+              message: 'Failed to update user information!'
+            })
+          }
         })
     },
     fetchRankings({
@@ -215,6 +233,25 @@ export default new Vuex.Store({
             type: 'error',
             message: 'Failed load user rankings!'
           })
+        })
+    },
+    createlobby({
+      commit
+    }, lobbyData) {
+      return axios({
+          url: 'http://localhost:5000/lobbies/create',
+          data: lobbyData,
+          method: 'POST'
+        })
+        .then(response => {
+          commit('setLobby', response.body)
+          commit('toggleSnackbar', {
+            show: true,
+            type: 'success',
+            message: 'Lobby Created!'
+          })
+        })
+        .catch(err => {
         })
     }
   },

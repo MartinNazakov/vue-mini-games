@@ -17,7 +17,11 @@
               </v-btn>
             </v-flex>
             <v-flex class="menu-item" xs12 sm12 md12>
-              <v-toolbar-title class="headline font-weight-black" id="logo-text">P L A Y G R O U N D</v-toolbar-title>
+              <v-toolbar-title
+                :class="{'headline': $vuetify.breakpoint.md, 'subheading': $vuetify.breakpoint.xs}"
+                class="headline font-weight-black"
+                id="logo-text"
+              >P L A Y G R O U N D</v-toolbar-title>
             </v-flex>
             <v-flex class="menu-item" xs12 sm12 md12>
               <NavUserActions v-show="isUserAuthenticated"></NavUserActions>
@@ -87,9 +91,11 @@ export default {
     filteredItems() {
       return this.items.filter(
         item =>
-          (item.requireAuth &&
-          this.isUserAuthenticated) || (!item.requireAuth && !this.isUserAuthenticated)
-          || (!item.requireAuth && this.isUserAuthenticated && item.showWhenAuthorized)
+          (item.requireAuth && this.isUserAuthenticated) ||
+          (!item.requireAuth && !this.isUserAuthenticated) ||
+          (!item.requireAuth &&
+            this.isUserAuthenticated &&
+            item.showWhenAuthorized)
       );
     }
   },

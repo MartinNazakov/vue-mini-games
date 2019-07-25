@@ -1,56 +1,31 @@
 <template>
-  <v-layout>
-    <v-flex xs12 sm12 md6 offset-sm3>
-      <v-card v-for="(game, index) in games" :key="index">
-        <v-img
-          class="white--text"
-          height="200px"
-          v-bind:src="game.imageSrc"
-        >
-          <v-container fill-height fluid>
-            <v-layout fill-height>
-              <v-flex xs12 sm12 md6 align-end flexbox>
-                <span class="headline">{{game.title}}</span>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-img>
-      </v-card>
-      <!-- <v-card>
-        <v-img
-          class="white--text"
-          height="200px"
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-        >
-          <v-container fill-height fluid>
-            <v-layout fill-height>
-              <v-flex xs12 align-end flexbox>
-                <span class="headline">Top 10 Australian beaches</span>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-img>
-        <v-card-title>
-          <div>
-            <span class="grey--text">Number 10</span>
-            <br />
-            <span>Whitehaven Beach</span>
-            <br />
-            <span>Whitsunday Island, Whitsunday Islands</span>
-          </div>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn flat color="orange">Share</v-btn>
-          <v-btn flat color="orange">Explore</v-btn>
-        </v-card-actions>
-      </v-card>-->
-    </v-flex>
-  </v-layout>
+  <v-container grid-list-md text-xs-center>
+    <v-layout row wrap>
+      <v-flex v-for="game of games" :key="game.title" xs12 sm6 md4>
+        <v-card class="mx-auto">
+          <v-img class="white--text" height="200px" :src="game.imageSrc">
+            <v-card-title class="align-end fill-height justify-center title">{{game.title}}</v-card-title>
+          </v-img>
+          <v-card-text>
+            <span class="text--primary">
+              <span v-if="game.maxPlayers">{{game.maxPlayers}} players</span>
+              <br />
+              <span>{{game.description}}</span>
+            </span>
+          </v-card-text>
+
+          <v-card-actions class="justify-center">
+            <v-btn v-on:click="generateLobby(game.type, game.maxPlayers)" text color="white">Create</v-btn>
+            <v-btn text color="blue">Join</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 import Vue from "vue";
-import axios from "axios";
 
 export default {
   name: "Games",
@@ -60,7 +35,9 @@ export default {
         {
           title: "Tic-Tac-Toe",
           description: "A classic game of Tic-Tac-Toe",
-          imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+          imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg",
+          type: "TicTacToe",
+          maxPlayers: 2
         },
         {
           title: "Tic-Tac-Toe 2",
@@ -71,11 +48,41 @@ export default {
           title: "Tic-Tac-Toe 3",
           description: "A classic game of Tic-Tac-Toe 3",
           imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+        },
+        {
+          title: "Tic-Tac-Toe 4",
+          description: "A classic game of Tic-Tac-Toe 4",
+          imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+        },
+        {
+          title: "Tic-Tac-Toe 5",
+          description: "A classic game of Tic-Tac-Toe 5",
+          imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
         }
       ]
     };
   },
-  methods: {}
+  methods: {
+    generateLobby: function(gameType, maxPlayers) {
+      const lobbyData = {
+        host: this.getUsername,
+        gameType: gameType,
+        maxPlayers: maxPlayers
+      };
+  
+      this.$store
+        .dispatch("createlobby", lobbyData)
+        .then(() => {
+          // dispatch lobby modal
+        })
+        .catch(err => console.log(err));
+    }
+  },
+  computed: {
+    getUsername() {
+      return this.$store.getters["username"];
+    }
+  }
 };
 </script>
 

@@ -42,11 +42,6 @@ export default {
     color: #ffffff;
     text-shadow: 0.5px 0.5px black;
     text-decoration: none;
-    // font-weight: bold;
-    // color: #2c3e50;
-    // &.router-link-exact-active {
-    //   color: #42b983;
-    // }
   }
 }
 

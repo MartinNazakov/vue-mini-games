@@ -32,7 +32,6 @@
 
 <script>
 import Vue from "vue";
-import axios from "axios";
 
 export default {
   name: "Login",
@@ -70,9 +69,6 @@ export default {
       this.sending = true;
       this.$store
         .dispatch("login", userData)
-        .then(() => {
-          // this.$router.push("/")
-        })
         .catch(err => console.log(err))
         .then(() => (this.sending = false));
     }
