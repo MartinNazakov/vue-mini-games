@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import auth from './modules/auth.module';
 import user from './modules/user.module';
 import snackbar from './modules/snackbar.module';
+import rankings from './modules/rankings.module';
 import lobby from './modules/lobby.module';
 
 Vue.use(Vuex);
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     auth,
     user,
     snackbar,
+    rankings,
     lobby
   }
 })
