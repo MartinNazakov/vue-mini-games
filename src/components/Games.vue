@@ -15,17 +15,19 @@
           </v-card-text>
 
           <v-card-actions class="justify-center">
-            <v-btn v-on:click="generateLobby(game.type, game.maxPlayers)" text color="white">Create</v-btn>
+            <v-btn @click="generateLobby(game.type, game.maxPlayers)" text color="white">Create</v-btn>
             <v-btn text color="blue">Join</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
+    <Lobby />
   </v-container>
 </template>
 
 <script>
 import Vue from "vue";
+import Lobby from "./Lobby";
 
 export default {
   name: "Games",
@@ -62,6 +64,9 @@ export default {
       ]
     };
   },
+  components: {
+    Lobby: Lobby
+  },
   methods: {
     generateLobby: function(gameType, maxPlayers) {
       const lobbyData = {
@@ -69,13 +74,17 @@ export default {
         gameType: gameType,
         maxPlayers: maxPlayers
       };
-  
+
       this.$store
         .dispatch("createlobby", lobbyData)
         .then(() => {
-          // dispatch lobby modal
+          this.$store.dispatch("showLobby").then(() => {
+            this.$store.dispatch("logUserToLobby", { io: this.$socket });
+          });
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          this.$store.dispatch("hideLobby");
+        });
     }
   },
   computed: {

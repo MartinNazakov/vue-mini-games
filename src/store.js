@@ -14,15 +14,18 @@ export default new Vuex.Store({
       type: ''
     },
     accessToken: localStorage.getItem('token') || null,
-    username: '',
+    username: localStorage.getItem('username') || '',
     email: '',
     birthDate: '',
     rankings: [],
     lobby: {
+      id: '',
       host: '',
       gameType: '',
-      maxPlayers: 0
-    }
+      maxPlayers: 0,
+      loggedUsers: []
+    },
+    showLobby: false
   },
   mutations: {
     toggleSnackbar: function (state, snackbarConfig) {
@@ -45,7 +48,14 @@ export default new Vuex.Store({
       state.rankings = rankings;
     },
     setLobby(state, lobbyData) {
-      state.lobby = lobbyData
+      state.lobby = Object.assign({}, lobbyData)
+    },
+    toggleLobby(state, shouldShow) {
+      state.showLobby = shouldShow
+    },
+    SOCKET_logUserToLobby(state, user) {
+      debugger;
+      state.lobby.loggedUsers.push(user);
     }
   },
   actions: {
@@ -58,7 +68,7 @@ export default new Vuex.Store({
       commit
     }) {
       axios({
-          url: 'http://localhost:5000/users/user',
+          url: 'http://localhost:5000/users/user?username=' + this.state.username,
           method: 'GET'
         })
         .then(userData => {
@@ -68,13 +78,7 @@ export default new Vuex.Store({
         }).catch(err => {
           if (err.response.status === 401) {
             // logout user
-            localStorage.removeItem('token');
-            axios.defaults.headers.common['Authorization'] = '';
-
-            commit('loginStatus', {
-              accessToken: '',
-              username: ''
-            });
+            this.dispatch("logout");
 
             commit('toggleSnackbar', {
               show: true,
@@ -136,8 +140,11 @@ export default new Vuex.Store({
         })
         .then(resp => {
           const token = resp.data.token;
+          const username = resp.data.username;
 
           localStorage.setItem('token', token);
+          localStorage.setItem('username', username);
+
           axios.defaults.headers.common['Authorization'] = token;
 
           commit('loginStatus', {
@@ -154,25 +161,31 @@ export default new Vuex.Store({
 
         })
         .catch(err => {
-          localStorage.removeItem('token');
-          axios.defaults.headers.common['Authorization'] = '';
 
-          commit('loginStatus', {
-            accessToken: '',
-            username: ''
-          });
-
-          commit('toggleSnackbar', {
-            show: true,
-            type: 'error',
-            message: err.message
-          });
+          if (err.response.status === 404) {
+            commit('toggleSnackbar', {
+              show: true,
+              type: 'error',
+              message: 'User not found!'
+            });
+          } else {
+            commit('toggleSnackbar', {
+              show: true,
+              type: 'error',
+              message: err.message
+            });
+            // logout user
+            this.dispatch("logout");
+          }
         })
     },
     logout({
       commit
     }) {
       localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      axios.defaults.headers.common['Authorization'] = '';
+
       commit('loginStatus', {
         accessToken: '',
         username: ''
@@ -188,7 +201,7 @@ export default new Vuex.Store({
       commit
     }, userinfo) {
       return axios({
-          url: 'http://localhost:5000/users/updateInfo',
+          url: 'http://localhost:5000/users/updateInfo?username=' + this.state.username,
           data: userinfo,
           method: 'POST'
         })
@@ -244,15 +257,44 @@ export default new Vuex.Store({
           method: 'POST'
         })
         .then(response => {
-          commit('setLobby', response.body)
+          console.log(response.data.lobbyData);
+          commit('setLobby', response.data.lobbyData);
           commit('toggleSnackbar', {
             show: true,
             type: 'success',
             message: 'Lobby Created!'
           })
         })
-        .catch(err => {
-        })
+        .catch(err => {})
+    },
+    removeLobby({
+      commit
+    }) {
+      commit('setLobby', {
+        host: '',
+        gameType: '',
+        maxPlayers: 0,
+        loggedusers: []
+      });
+    },
+    showLobby({
+      commit
+    }) {
+      commit('toggleLobby', true);
+    },
+    hideLobby({
+      commit
+    }) {
+      commit('toggleLobby', false);
+    },
+    socket_logUserToLobby({
+      commit,
+      state
+    }, params) {
+      params.io.emit('enterLobby', {
+        lobby: state.lobby,
+        user: state.username
+      });
     }
   },
   getters: {
@@ -270,6 +312,12 @@ export default new Vuex.Store({
     },
     rankings: (state) => {
       return state.rankings;
+    },
+    lobby: (state) => {
+      return state.lobby;
+    },
+    lobbyVisible: (state) => {
+      return state.showLobby;
     }
   }
 })

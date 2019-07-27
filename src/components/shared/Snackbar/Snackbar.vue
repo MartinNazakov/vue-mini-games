@@ -30,9 +30,12 @@ export default {
       timeout: 6000
     };
   },
-  computed: mapState(["snackbar"]),
+  computed: mapState({
+    snackbar: state => state.snackbar.snackbar
+  }),
   watch: {
     snackbar(newValue, oldValue) {
+      debugger;
       const msg = this.snackbar.message;
       if (msg !== "") {
         this.show = true;

@@ -4,7 +4,7 @@
 
 <script>
 import Vue from "vue";
-import Games from "@/components/Games.vue"; // @ is an alias to /src
+import Games from "@/components/Games.vue";
 
 export default {
   name: "games",
