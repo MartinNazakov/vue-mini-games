@@ -1,9 +1,11 @@
 <template>
   <v-layout justify-center>
     <v-dialog :value="getLobbiesListVisible" width="600px" persistent>
-      <v-card v-for="lobby of getLobbiesList" :key="lobby.id">
-        <v-card-title @click="joinLobby(lobby.id)" class="justify-center">
-          <span class="headline">{{lobby.host}}'s lobby</span>
+      <v-card>
+        <v-card-title v-for="lobby of getLobbiesList" :key="lobby.id">
+          <div @click="joinLobby(lobby.id)" class="justify-center lobby-container pa-2">
+            <span class="headline">{{lobby.host}}'s lobby</span>
+          </div>
         </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -59,4 +61,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.lobby-container {
+  cursor: pointer;
+  background-color: #f1f1f1;
+  border-radius: 50px 0px 50px 0px;
+  width: 80%;
+  margin: 0 auto;
+}
 </style>
