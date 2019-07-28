@@ -16,18 +16,20 @@
 
           <v-card-actions class="justify-center">
             <v-btn @click="generateLobby(game.type, game.maxPlayers)" text color="white">Create</v-btn>
-            <v-btn text color="blue">Join</v-btn>
+            <v-btn @click="getLobbies(game.type)" text color="blue">Join</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
     <Lobby />
+    <LobbiesList/>
   </v-container>
 </template>
 
 <script>
 import Vue from "vue";
 import Lobby from "./Lobby";
+import LobbiesList from "./LobbiesList";
 
 export default {
   name: "Games",
@@ -65,26 +67,25 @@ export default {
     };
   },
   components: {
-    Lobby: Lobby
+    Lobby: Lobby,
+    LobbiesList: LobbiesList
   },
   methods: {
     generateLobby: function(gameType, maxPlayers) {
-      const lobbyData = {
-        host: this.getUsername,
-        gameType: gameType,
-        maxPlayers: maxPlayers
+      // for now - pass the IO instance to the action
+      // TO-DO - check if there is a better way to inject it in the store
+      const data = {
+        lobby: {
+          host: this.getUsername,
+          gameType: gameType,
+          maxPlayers: maxPlayers
+        },
+        io: this.$socket
       };
-
-      this.$store
-        .dispatch("createlobby", lobbyData)
-        .then(() => {
-          this.$store.dispatch("showLobby").then(() => {
-            this.$store.dispatch("logUserToLobby", { io: this.$socket });
-          });
-        })
-        .catch(err => {
-          this.$store.dispatch("hideLobby");
-        });
+      this.$store.dispatch("createLobby", data);
+    },
+    getLobbies: function(gameType) {
+      this.$store.dispatch("getLobbiesForGame", gameType)
     }
   },
   computed: {

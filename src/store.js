@@ -54,7 +54,6 @@ export default new Vuex.Store({
       state.showLobby = shouldShow
     },
     SOCKET_logUserToLobby(state, user) {
-      debugger;
       state.lobby.loggedUsers.push(user);
     }
   },

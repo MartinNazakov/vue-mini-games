@@ -13,14 +13,14 @@ Vue.config.productionTip = false
 
 Vue.use(Vuetify);
 
-// Vue.use(new VueSocketIO({
-//   debug: true,
-//   connection: 'http://localhost:5000',
-//   vuex: {
-//     store,
-//     mutationPrefix: 'SOCKET_'
-//   }
-// }));
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: 'http://localhost:5000',
+  vuex: {
+    store,
+    mutationPrefix: 'SOCKET_'
+  }
+}));
 
 const token = localStorage.getItem('token')
 if (token) {

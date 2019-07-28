@@ -35,7 +35,6 @@ export default {
   }),
   watch: {
     snackbar(newValue, oldValue) {
-      debugger;
       const msg = this.snackbar.message;
       if (msg !== "") {
         this.show = true;
