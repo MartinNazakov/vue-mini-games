@@ -1,4 +1,5 @@
 import axios from 'axios';
+import router from '../../router';
 
 export default {
   state: {
@@ -38,7 +39,7 @@ export default {
     },
     removeAllUsersFromLobby(state) {
       state.loggedUsers = [];
-    },
+    }
   },
   actions: {
     createLobby({
@@ -87,9 +88,9 @@ export default {
       commit
     }, gameType) {
       axios({
-          url: 'http://localhost:5000/lobbies?gameType=' + gameType,
-          method: 'GET'
-        })
+        url: 'http://localhost:5000/lobbies?gameType=' + gameType,
+        method: 'GET'
+      })
         .then(resp => {
           const lobbiesList = resp.data;
           commit('setLobbiesList', lobbiesList);
@@ -128,7 +129,6 @@ export default {
         gameType: '',
         maxPlayers: 0
       }
-      console.log('recieved socket remove lobby event');
       commit('setLobby', lobby);
       commit('removeAllUsersFromLobby');
       commit('toggleLobby', false);
@@ -148,6 +148,15 @@ export default {
       commit
     }, user) {
       commit('removeUserFromLobby', user);
+    },
+    SOCKET_lobbyFull({
+      commit
+    }) {
+      commit('toggleSnackbar', {
+        show: true,
+        type: 'info',
+        message: 'Lobby is full!'
+      });
     },
     toggleLobbiesList({
       commit

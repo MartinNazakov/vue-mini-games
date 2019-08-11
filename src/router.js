@@ -57,6 +57,17 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/tictactoe',
+      name: 'tictactoe',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import( /* webpackChunkName: "about" */ './views/games/TicTacToe.vue'),
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })

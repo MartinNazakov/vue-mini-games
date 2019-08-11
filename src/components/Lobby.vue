@@ -29,7 +29,7 @@
             v-if="getUsername === getLobby.host"
             :disabled="startButtonDisabled"
             text
-            @click="closeLobby()"
+            @click="startGame(getLobby.id, getLobby.gameType)"
           >Start</v-btn>
           <v-btn
             color="blue darken-1"
@@ -81,6 +81,15 @@ export default {
       } else if (this.getLoggedUsers.indexOf(this.getUsername) !== -1) {
         this.leaveLobby(this.getLobby);
       }
+    },
+    startGame(lobbyId, gameType) {
+      const data = {
+        id: lobbyId,
+        gameType: gameType,
+        io: this.$socket
+      };
+      console.log("starting game..");
+      this.$store.dispatch("startGame", data);
     }
   },
   computed: {
@@ -97,7 +106,24 @@ export default {
       return this.$store.getters["username"];
     },
     startButtonDisabled() {
-      return this.getLoggedUsers.length !== this.getLobby.maxPlayers
+      return this.getLoggedUsers.length !== this.getLobby.maxPlayers;
+    },
+    game() {
+      return this.$store.getters["game"];
+    }
+  },
+  watch: {
+    game(newValue, oldValue) {
+      console.log(newValue);
+      const gameId = newValue.id;
+      if (gameId !== "") {
+        const data = {
+          io: this.$socket,
+          id: gameId
+        };
+
+        this.$store.dispatch("joinGameRoom", data);
+      }
     }
   }
 };
