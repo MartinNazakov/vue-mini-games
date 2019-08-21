@@ -29,7 +29,7 @@
             v-if="getUsername === getLobby.host"
             :disabled="startButtonDisabled"
             text
-            @click="startGame(getLobby.id, getLobby.gameType)"
+            @click="startGame(getLobby.id, getLobby.gameType, getLoggedUsers)"
           >Start</v-btn>
           <v-btn
             color="blue darken-1"
@@ -82,11 +82,12 @@ export default {
         this.leaveLobby(this.getLobby);
       }
     },
-    startGame(lobbyId, gameType) {
+    startGame(lobbyId, gameType, players) {
       const data = {
         id: lobbyId,
         gameType: gameType,
-        io: this.$socket
+        io: this.$socket,
+        players: players
       };
       console.log("starting game..");
       this.$store.dispatch("startGame", data);

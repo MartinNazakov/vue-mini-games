@@ -27,7 +27,7 @@ export default {
       type: "",
       x: "right",
       y: "top",
-      timeout: 6000
+      timeout: 3000
     };
   },
   computed: mapState({

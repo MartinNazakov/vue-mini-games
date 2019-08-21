@@ -2,7 +2,14 @@
   <v-container>
     <v-layout justify-center>
       <v-flex v-for="(x, xIndex) in game.board" :key="xIndex">
-        <v-card align-center class="ttt-cell" v-for="(y, yIndex) in x" :key="yIndex">
+        <v-card
+          @click="makeMove(xIndex, yIndex)"
+          v-bind:class="{activePlayer: game.currentPlayerTurn === getUsername}"
+          align-center
+          class="ttt-cell"
+          v-for="(y, yIndex) in x"
+          :key="yIndex"
+        >
           <div class="ttt-cell-text">{{'|' + y + '|'}}</div>
         </v-card>
       </v-flex>
@@ -18,9 +25,26 @@ export default {
   data: function() {
     return {};
   },
+  methods: {
+    makeMove(x, y) {
+      if (this.game.currentPlayerTurn === this.getUsername) {
+        console.log(x, y);
+        const data = {
+          io: this.$socket,
+          x: x,
+          y: y,
+          id: this.game.id
+        }
+        this.$store.dispatch("makeMove", data)
+      }
+    }
+  },
   computed: {
     game() {
       return this.$store.getters["game"];
+    },
+    getUsername() {
+      return this.$store.getters["username"];
     }
   }
 };
@@ -30,6 +54,10 @@ export default {
 <style scoped lang="scss">
 .ttt-cell {
   height: 150px;
+
+  &.activePlayer {
+    cursor: pointer;
+  }
 
   .ttt-cell-text {
     text-align: center;

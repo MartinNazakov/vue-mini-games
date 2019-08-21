@@ -2,48 +2,90 @@ import axios from 'axios';
 import router from '../../../router';
 
 export default {
-    state: {
-        game: {
-            id: '',
-            currentPlayerTurn: '',
-            board: [[]],
-            players: []
-        }
-    },
-    mutations: {
-        setGame(state, game) {
-            state.game = game;
-        },
-    },
-    actions: {
-        startGame({
-            commit,
-            rootState
-        }, params) {
-            console.log(rootState);
-            params.io.emit('startGame', {
-                lobbyId: rootState.lobby.lobby.id,
-                gameType: params.gameType,
-                players: rootState.loggedUsers
-            });
-        },
-        joinGameRoom({ }, params) {
-            params.io.emit('joinGameRoom', {
-                id: params.id
-            });
-        },
-        SOCKET_startGame({
-            commit
-        }, game) {
-            commit('setGame', game);
-        },
-        SOCKET_goToGame({ }) {
-            router.push("tictactoe");
-        },
-    },
-    getters: {
-        game: (state) => {
-            return state.game;
-        }
+  state: {
+    game: {
+      id: '',
+      currentPlayerTurn: '',
+      currentPlayerSymbol: '',
+      board: [
+        []
+      ],
+      players: [],
+      winner: ''
     }
+  },
+  mutations: {
+    setGame(state, game) {
+      state.game = game;
+    },
+    setWinner(state, winner) {
+      state.game.winner = winner;
+    },
+  },
+  actions: {
+    startGame({
+      commit,
+      rootState
+    }, params) {
+      console.log(params);
+      params.io.emit('startGame', {
+        lobbyId: rootState.lobby.lobby.id,
+        gameType: params.gameType,
+        players: params.players
+      });
+    },
+    makeMove({}, params) {
+      params.io.emit('makeMove', {
+        x: params.x,
+        y: params.y,
+        id: params.id
+      })
+    },
+    joinGameRoom({}, params) {
+      params.io.emit('joinGameRoom', {
+        id: params.id
+      });
+    },
+    getStartPlayer({}) {
+
+    },
+    SOCKET_winner({
+      commit,
+      rootState
+    }, winner) {
+      const currentPlayer = rootState.auth.username;
+      if (currentPlayer === winner) {
+        commit('toggleSnackbar', {
+          show: true,
+          type: 'success',
+          message: 'You win!'
+        });
+      } else {
+        commit('toggleSnackbar', {
+          show: true,
+          type: 'error',
+          message: 'You lose!'
+        });
+      }
+      router.push("rankings");
+    },
+    SOCKET_startGame({
+      commit
+    }, game) {
+      commit('setGame', game);
+    },
+    SOCKET_goToGame({}) {
+      router.push("tictactoe");
+    },
+    SOCKET_makeMove({
+      commit
+    }, game) {
+      commit('setGame', game);
+    }
+  },
+  getters: {
+    game: (state) => {
+      return state.game;
+    }
+  }
 }
