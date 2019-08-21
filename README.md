@@ -2,7 +2,7 @@
 
 ## Vue Mini Games
 
-The project is build using the following technologies:
+The project is built using the following technologies:
 
 Client:
 - Vuejs
