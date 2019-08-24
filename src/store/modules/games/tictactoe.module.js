@@ -69,6 +69,26 @@ export default {
       }
       router.push("rankings");
     },
+    SOCKET_noWinner({
+      commit
+    }) {
+
+      commit('toggleSnackbar', {
+        show: true,
+        type: 'info',
+        message: 'Draw. No winners!'
+      });
+      router.push("rankings");
+    },
+    SOCKET_illegalMove({
+      commit
+    }) {
+      commit('toggleSnackbar', {
+        show: true,
+        type: 'info',
+        message: 'This field has already been occupied!'
+      });
+    },
     SOCKET_startGame({
       commit
     }, game) {
