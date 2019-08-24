@@ -39,28 +39,28 @@ export default {
         {
           title: "Tic-Tac-Toe",
           description: "A classic game of Tic-Tac-Toe",
-          imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg",
+          imageSrc: "https://cdn.instructables.com/FQT/IJLK/JAWTX2WA/FQTIJLKJAWTX2WA.LARGE.jpg?auto=webp&frame=1&fit=bounds",
           type: "TicTacToe",
           maxPlayers: 2
         },
         {
-          title: "Tic-Tac-Toe 2",
-          description: "A classic game of Tic-Tac-Toe 2",
+          title: "Game 2",
+          description: "Game 2",
           imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
         },
         {
-          title: "Tic-Tac-Toe 3",
-          description: "A classic game of Tic-Tac-Toe 3",
+          title: "Game 3",
+          description: "Game 3",
           imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
         },
         {
-          title: "Tic-Tac-Toe 4",
-          description: "A classic game of Tic-Tac-Toe 4",
+          title: "Game 4",
+          description: "Game 4",
           imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
         },
         {
-          title: "Tic-Tac-Toe 5",
-          description: "A classic game of Tic-Tac-Toe 5",
+          title: "Game 5",
+          description: "Game 5",
           imageSrc: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
         }
       ]
