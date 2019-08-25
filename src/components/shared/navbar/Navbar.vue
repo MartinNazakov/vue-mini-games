@@ -65,7 +65,7 @@ export default {
         {
           route: "/games",
           title: "Games",
-          requireAuth: false,
+          requireAuth: true,
           showWhenAuthorized: true
         },
         {
